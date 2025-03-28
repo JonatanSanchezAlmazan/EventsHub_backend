@@ -8,7 +8,7 @@ const cors = require('cors');
 const { connectCloudinary } = require('./src/config/configCloudinary');
 const corsOptions = {
   // origin: 'http://localhost:5173',
-  origin: 'https://events-hub-nine.vercel.app/',
+  origin: 'https://events-hub-nine.vercel.app',
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization', 'X-Custom-Header'],
   credentials: true
