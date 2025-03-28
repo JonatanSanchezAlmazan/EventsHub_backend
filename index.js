@@ -7,10 +7,10 @@ const mainRouter = require('./src/api/routes/main');
 const cors = require('cors');
 const { connectCloudinary } = require('./src/config/configCloudinary');
 const corsOptions = {
-  origin: 'http://localhost:5173',
-  // origin: 'https://eco-front-nine.vercel.app',
-  // methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  // allowedHeaders: ['Content-Type', 'Authorization', 'X-Custom-Header'],
+  // origin: 'http://localhost:5173',
+  origin: 'https://events-hub-nine.vercel.app/',
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Custom-Header'],
   credentials: true
 };
 

@@ -79,11 +79,20 @@ const login = async (req, res, next) => {
 
       res.cookie('auth_token', token, {
         httpOnly: true,
-        secure: false,
-        sameSite: 'Strict',
+        secure: true,
+        sameSite: 'None',
         maxAge: 3600000,
+        domain: '.events-hub-backend-pi.vercel.app',
         path: '/'
       });
+
+      // res.cookie('auth_token', token, {
+      //   httpOnly: true,
+      //   secure: false,
+      //   sameSite: 'Strict',
+      //   maxAge: 3600000,
+      //   path: '/'
+      // });
 
       return res.status(200).json({ user });
     } else {
