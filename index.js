@@ -24,7 +24,26 @@ app.use(cookieParser());
 
 app.use('/', mainRouter);
 app.use('*', (req, res, next) => {
-  return res.status(404).json('Route not found');
+  return res.status(404).send(
+    `  <!DOCTYPE html>
+    <html lang="es">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Página no encontrada</title>
+        <style>
+            body { font-family: Arial, sans-serif; text-align: center; padding: 50px; }
+            h1 { color: red; }
+        </style>
+    </head>
+    <body>
+        <h1>404 - Página no encontrada</h1>
+        <p>Lo sentimos, la ruta que buscas no existe.</p>
+    </body>
+    </html>
+  
+   `
+  );
 });
 
 app.listen(3000, () => {
