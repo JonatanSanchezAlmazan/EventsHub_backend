@@ -82,7 +82,7 @@ const login = async (req, res, next) => {
         secure: true,
         sameSite: 'None',
         maxAge: 3600000,
-        domain: '.events-hub-backend-pi.vercel.app',
+        domain: '.events-hub-peach.vercel.app',
         path: '/'
       });
 
