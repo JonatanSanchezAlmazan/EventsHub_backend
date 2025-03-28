@@ -24,7 +24,7 @@ const getAllUsers = async (req, res, next) => {
 const getUserById = async (req, res, next) => {
   try {
     const { id } = req.params;
-    const user = await User.findById(id).select('name email image');
+    const user = await User.findById(id).select('name email image ubi description firstName');
 
     return res.status(200).json(user);
   } catch (error) {
@@ -76,13 +76,15 @@ const login = async (req, res, next) => {
       const token = generateSing(user._id);
       user.password = undefined;
       user.email = undefined;
+
       res.cookie('auth_token', token, {
         httpOnly: true,
         secure: false,
-        sameSite: 'Lax',
+        sameSite: 'Strict',
         maxAge: 3600000,
         path: '/'
       });
+
       return res.status(200).json({ user });
     } else {
       return res.status(400).json({
@@ -100,19 +102,9 @@ const updateUser = async (req, res, next) => {
   try {
     const { id } = req.params;
     const { password, ...other } = req.body;
+    console.log(req.body);
 
     const oldUser = await User.findById(id);
-
-    if (password?.length > 10 || password?.length < 5) {
-      return res.status(400).json({
-        message: 'La contraseña tiene que tener entre 5 y 10 carácteres'
-      });
-    }
-
-    if (password) {
-      const hashedPassword = await bcrypt.hash(password, 10);
-      other.password = hashedPassword;
-    }
 
     if (req.file) {
       if (oldUser.image) {
@@ -121,15 +113,15 @@ const updateUser = async (req, res, next) => {
       other.image = req.file.path;
     }
 
-    const userUpdated = await User.findByIdAndUpdate(id, { ...other }, { new: true }).select('name email image rol');
+    const user = await User.findByIdAndUpdate(id, { ...other }, { new: true }).select('name  image rol');
 
-    if (!userUpdated) {
+    if (!user) {
       return res.status(404).json({ message: 'Usuario no encontrado' });
     }
 
     return res.status(200).json({
       message: 'Usuario actualizado correctamente',
-      userUpdated
+      user
     });
   } catch (error) {
     return res.status(400).json({
