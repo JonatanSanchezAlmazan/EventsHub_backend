@@ -2,11 +2,11 @@ const mongoose = require("mongoose");
 
 const eventSchema = new mongoose.Schema(
   {
-    creator: { type: mongoose.Types.ObjectId, ref: "users" },
+    idAuthor: { type: mongoose.Types.ObjectId, ref: "users" },
     title: { type: String, required: true, trim: true },
-    date: { type: String, required: true },
-    hour: { type: String, required: true },
-    ubi: { type: String, required: true, trim: true },
+    date: { type: String, required: true, trim:true },
+    schedule: { type: String, required: true, trim:true },
+    ubi: { type: String, required: true, trim: true, trim:true },
     description: { type: String, required: true, trim: true },
     img: { type: String, required: true },
     category: {
@@ -34,6 +34,7 @@ const eventSchema = new mongoose.Schema(
       ],
     },
     attendees: [{ type: mongoose.Types.ObjectId, ref: "users" }],
+    maxAttendes:{type:Number, required:true}
   },
   {
     timestamps: true,
