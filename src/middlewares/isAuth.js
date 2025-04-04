@@ -12,7 +12,7 @@ const isAuth = async (req, res, next) => {
     }
 
     const { id } = verifyToken(token);
-    const user = await User.findById(id).select('name email image reservations isOwner');
+    const user = await User.findById(id).select('name email image rol');
 
     req.user = user;
     next();
@@ -26,10 +26,10 @@ const isAuth = async (req, res, next) => {
 };
 
 const isOrganizer = async (req, res, next) => {
-  if (req.user.rol === 'organizer') {
+  if (req.user.rol === 'owner') {
     next();
   } else {
-    return res.status(401).json({ message: 'No estás autorizado' });
+    return res.status(401).json({ message: 'No estás autorizado!!!!!' });
   }
 };
 
