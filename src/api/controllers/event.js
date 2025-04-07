@@ -64,7 +64,7 @@ const getEventById = async (req, res, next) => {
   try {
     const { id } = req.params;
     const event = await Event.findById(id).populate({
-      path: 'creator',
+      path: 'idAuthor',
       select: 'name email image'
     });
     return res.status(200).json(event);
