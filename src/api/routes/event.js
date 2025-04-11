@@ -9,7 +9,7 @@ const { getAllEvents, updateEvent, deleteEvent, postEvents, getEventById, toogle
 eventsRouter.post('/register', isAuth, isOrganizer, upload.single('image'), postEvents);
 eventsRouter.get('/', getAllEvents);
 eventsRouter.get('/:id', getEventById);
-eventsRouter.put('/toogleAttendee', isAuth, toogleAttendee);
+eventsRouter.put('/toggleAttendee', isAuth, toogleAttendee);
 eventsRouter.put('/:id', isAuth, isOrganizer, upload.single('image'), updateEvent);
 eventsRouter.delete('/:id', isAuth, isOrganizer, deleteEvent);
 
