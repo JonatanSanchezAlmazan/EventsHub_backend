@@ -6,6 +6,7 @@ const Event = require('../models/event');
 const postEvents = async (req, res, next) => {
   try {
     const newEvent = new Event(req.body);
+    console.log(req.body);
 
     if (req.file) {
       newEvent.image = req.file.path;
@@ -63,10 +64,16 @@ const getAllEvents = async (req, res, next) => {
 const getEventById = async (req, res, next) => {
   try {
     const { id } = req.params;
-    const event = await Event.findById(id).populate({
-      path: 'idAuthor',
-      select: 'name email image'
-    });
+    const event = await Event.findById(id).populate([
+      {
+        path: 'idAuthor',
+        select: 'name email image'
+      },
+      {
+        path: 'attendees',
+        select: 'name  image'
+      }
+    ]);
     return res.status(200).json(event);
   } catch (error) {
     return res.status(400).json('Error al mostrar el evento');
@@ -78,6 +85,7 @@ const toogleAttendee = async (req, res) => {
     const { eventId, userId } = req.body;
 
     const event = await Event.findById(eventId);
+    //! comprobar si la capacidad es igual a los asistentes para que no deje meter más asistentes
     const isAttendee = event.attendees.includes(userId);
     const updatedEvent = await Event.findByIdAndUpdate(eventId, isAttendee ? { $pull: { attendees: userId } } : { $addToSet: { attendees: userId } }, { new: true });
     return res.status(200).json({
