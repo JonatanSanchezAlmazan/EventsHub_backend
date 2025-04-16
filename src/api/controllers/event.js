@@ -85,11 +85,22 @@ const toogleAttendee = async (req, res) => {
     const { eventId, userId } = req.body;
 
     const event = await Event.findById(eventId);
-    //! comprobar si la capacidad es igual a los asistentes para que no deje meter más asistentes
+
+    if (event.idAuthor.toString() === userId) {
+      return res.status(400).json({
+        message: 'No puedes asistir a un evento tuyo'
+      });
+    }
+    if (event.capacity === event.attendees.length) {
+      return res.status(400).json({
+        message: 'Evento completo'
+      });
+    }
+
     const isAttendee = event.attendees.includes(userId);
     const updatedEvent = await Event.findByIdAndUpdate(eventId, isAttendee ? { $pull: { attendees: userId } } : { $addToSet: { attendees: userId } }, { new: true });
     return res.status(200).json({
-      mesaage: 'Assistente añadido o eliminado correctamente',
+      message: isAttendee ? `Has dejade de asistir a ${event.title}` : `Añadido al evento ${event.title}`,
       updatedEvent
     });
   } catch (error) {
