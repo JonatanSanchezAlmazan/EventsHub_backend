@@ -65,6 +65,8 @@ const register = async (req, res, next) => {
 const login = async (req, res, next) => {
   try {
     const { email, password } = req.body;
+   
+    
     const user = await User.findOne({ email }).select('name image email password rol');
     if (!user) {
       return res.status(400).json({
@@ -81,7 +83,7 @@ const login = async (req, res, next) => {
         httpOnly: true,
         secure: false,
         sameSite: 'Lax',
-        maxAge: 3600000,
+        maxAge: 86400000,
         path: '/'
       });
 
