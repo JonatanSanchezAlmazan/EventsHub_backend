@@ -65,8 +65,7 @@ const register = async (req, res, next) => {
 const login = async (req, res, next) => {
   try {
     const { email, password } = req.body;
-   
-    
+
     const user = await User.findOne({ email }).select('name image email password rol');
     if (!user) {
       return res.status(400).json({
@@ -79,22 +78,22 @@ const login = async (req, res, next) => {
       user.password = undefined;
       user.email = undefined;
 
-      res.cookie('auth_token', token, {
-        httpOnly: true,
-        secure: false,
-        sameSite: 'Lax',
-        maxAge: 86400000,
-        path: '/'
-      });
-
       // res.cookie('auth_token', token, {
       //   httpOnly: true,
-      //   secure: true,
-      //   sameSite: 'None',
-      //   maxAge: 3600000,
-      //   domain: '.events-hub-peach.vercel.app',
+      //   secure: false,
+      //   sameSite: 'Lax',
+      //   maxAge: 86400000,
       //   path: '/'
       // });
+
+      res.cookie('auth_token', token, {
+        httpOnly: true,
+        secure: true,
+        sameSite: 'None',
+        maxAge: 86400000,
+        domain: '.events-hub-peach.vercel.app',
+        path: '/'
+      });
 
       return res.status(200).json({ user });
     } else {

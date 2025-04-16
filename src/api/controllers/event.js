@@ -26,26 +26,60 @@ const postEvents = async (req, res, next) => {
     });
   }
 };
-const getEventsByAuthor = async(req,res) => {
+const getEventsByAuthor = async (req, res) => {
   try {
-    const{idAuthor} = req.params;
-    console.log(idAuthor);
-    
-    const events = await Event.find({'idAuthor': idAuthor});
-    if(!events){
+    const { idAuthor } = req.params;
+
+    const events = await Event.find({ idAuthor: idAuthor }).populate([
+      {
+        path: 'idAuthor',
+        select: 'name email image'
+      },
+      {
+        path: 'attendees',
+        select: 'name  image'
+      }
+    ]);
+    if (!events) {
       return res.status(400).json({
-        message:'No hay eventos que mostrar'
-      })
+        message: 'No hay eventos que mostrar'
+      });
     }
     return res.status(200).json({
-      message:'Eventos',
+      message: 'Eventos',
       events
-    })
-    
+    });
   } catch (error) {
     return res.status(400).json('Error al mostrar los eventos');
   }
-}
+};
+
+const getEventAttendee = async (req, res) => {
+  try {
+    const { idUser } = req.params;
+    const events = await Event.find({ attendees: idUser }).populate([
+      {
+        path: 'idAuthor',
+        select: 'name email image'
+      },
+      {
+        path: 'attendees',
+        select: 'name  image'
+      }
+    ]);
+    if (!events) {
+      return res.status(400).json({
+        message: 'No hay eventos que mostrar'
+      });
+    }
+    return res.status(200).json({
+      message: 'Eventos',
+      events
+    });
+  } catch (error) {
+    return res.status(400).json('Error al mostrar los eventos');
+  }
+};
 
 const getAllEvents = async (req, res, next) => {
   try {
@@ -83,8 +117,8 @@ const getAllEvents = async (req, res, next) => {
 
 const getEventById = async (req, res, next) => {
   try {
-    const { id } = req.params;
-    const event = await Event.findById(id).populate([
+    const { idEvent } = req.params;
+    const event = await Event.findById(idEvent).populate([
       {
         path: 'idAuthor',
         select: 'name email image'
@@ -173,6 +207,7 @@ module.exports = {
   getAllEvents,
   getEventById,
   getEventsByAuthor,
+  getEventAttendee,
   updateEvent,
   toogleAttendee,
   deleteEvent
