@@ -91,7 +91,6 @@ const login = async (req, res, next) => {
         secure: true,
         sameSite: 'None',
         maxAge: 86400000,
-        domain: 'events-hub-peach.vercel.app',
         path: '/'
       });
 
