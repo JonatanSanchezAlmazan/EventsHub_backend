@@ -4,9 +4,10 @@ const { createFolderCloudinary } = require('../../utils/cloudinary/file');
 const upload = multer({ storage: createFolderCloudinary('Events') });
 const { isAuth, isOrganizer } = require('../../middlewares/isAuth');
 
-const { getAllEvents, updateEvent, deleteEvent, postEvents, getEventById, toogleAttendee } = require('../controllers/event');
+const { getAllEvents, updateEvent, deleteEvent, postEvents, getEventById, toogleAttendee, getEventsByAuthor } = require('../controllers/event');
 
 eventsRouter.post('/register', isAuth, isOrganizer, upload.single('image'), postEvents);
+eventsRouter.get('/:idAuthor', isAuth, getEventsByAuthor);
 eventsRouter.get('/', getAllEvents);
 eventsRouter.get('/:id', getEventById);
 eventsRouter.put('/toggleAttendee', isAuth, toogleAttendee);

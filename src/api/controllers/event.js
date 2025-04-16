@@ -26,6 +26,26 @@ const postEvents = async (req, res, next) => {
     });
   }
 };
+const getEventsByAuthor = async(req,res) => {
+  try {
+    const{idAuthor} = req.params;
+    console.log(idAuthor);
+    
+    const events = await Event.find({'idAuthor': idAuthor});
+    if(!events){
+      return res.status(400).json({
+        message:'No hay eventos que mostrar'
+      })
+    }
+    return res.status(200).json({
+      message:'Eventos',
+      events
+    })
+    
+  } catch (error) {
+    return res.status(400).json('Error al mostrar los eventos');
+  }
+}
 
 const getAllEvents = async (req, res, next) => {
   try {
@@ -152,6 +172,7 @@ module.exports = {
   postEvents,
   getAllEvents,
   getEventById,
+  getEventsByAuthor,
   updateEvent,
   toogleAttendee,
   deleteEvent
