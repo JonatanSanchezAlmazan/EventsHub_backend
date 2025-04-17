@@ -1,12 +1,9 @@
 const { deleteFile } = require('../../utils/cloudinary/deleteFile');
-const { printInfo } = require('../../utils/functions/printInfo');
-const { dataPerPage } = require('../../utils/variable/pagination');
 const Event = require('../models/event');
 
 const postEvents = async (req, res, next) => {
   try {
     const newEvent = new Event(req.body);
-    console.log(req.body);
 
     if (req.file) {
       newEvent.image = req.file.path;
@@ -19,8 +16,6 @@ const postEvents = async (req, res, next) => {
       event
     });
   } catch (error) {
-    console.log(error);
-
     return res.status(400).json({
       message: 'No se ha podido crear el evento'
     });
@@ -176,8 +171,8 @@ const updateEvent = async (req, res, next) => {
     });
 
     if (req.file) {
-      updateData.img = req.file.path;
-      deleteFile(oldEvent.img);
+      updateData.image = req.file.path;
+      deleteFile(oldEvent.image);
     }
 
     const event = await Event.findByIdAndUpdate(id, updateData, { new: true });
@@ -192,7 +187,12 @@ const deleteEvent = async (req, res, next) => {
   try {
     const { id } = req.params;
     const event = await Event.findByIdAndDelete(id);
-    deleteFile(event.img);
+    if (event.attendees.length > 0) {
+      return res.status(400).json({
+        message: 'No puedes eliminar un evento con asistentes'
+      });
+    }
+    deleteFile(event.image);
     return res.status(200).json({
       message: 'Evento eliminado correctamente',
       event

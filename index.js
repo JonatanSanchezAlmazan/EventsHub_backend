@@ -32,8 +32,9 @@ app.use('*', (req, res, next) => {
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Página no encontrada</title>
         <style>
-            body { font-family: Arial, sans-serif; text-align: center; padding: 50px; }
+            body { font-family: Arial, sans-serif; text-align: center; padding: 50px; background-color:#111d38 }
             h1 { color: red; }
+            p {color: white}
         </style>
     </head>
     <body>

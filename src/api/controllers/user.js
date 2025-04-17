@@ -1,6 +1,7 @@
 const { deleteFile } = require('../../utils/cloudinary/deleteFile');
-const { sendEmail } = require('../../utils/Email/sendEmail');
+
 const { generateSing } = require('../../utils/jwt/jwt');
+const Event = require('../models/event');
 const User = require('../models/user');
 const bcrypt = require('bcrypt');
 
@@ -14,7 +15,6 @@ const getAllUsers = async (req, res, next) => {
 
     return res.status(200).json(allUsers);
   } catch (error) {
-    console.log(error);
     return res.status(400).json({
       message: 'Error al encontrar los usuarios'
     });
@@ -54,8 +54,6 @@ const register = async (req, res, next) => {
       user
     });
   } catch (error) {
-    console.log(error);
-
     return res.status(400).json({
       message: 'Error al registratse'
     });
@@ -101,8 +99,6 @@ const login = async (req, res, next) => {
       });
     }
   } catch (error) {
-    console.log(error);
-
     return res.status(400).json({ message: 'Error al hacer login' });
   }
 };
@@ -111,7 +107,6 @@ const updateUser = async (req, res, next) => {
   try {
     const { id } = req.params;
     const { password, ...other } = req.body;
-    console.log(req.body);
 
     const oldUser = await User.findById(id);
 
@@ -142,6 +137,12 @@ const updateUser = async (req, res, next) => {
 const deleteUser = async (req, res, next) => {
   try {
     const { id } = req.params;
+    const events = await Event.find({ idAuthor: id });
+    if (events) {
+      return res.status(400).json({
+        message: 'No puedes eliminar la cuenta con eventos creados'
+      });
+    }
     const user = await User.findByIdAndDelete(id);
     if (user.image) {
       deleteFile(user.image);
@@ -154,11 +155,25 @@ const deleteUser = async (req, res, next) => {
   }
 };
 
+const logout = async (req, res) => {
+  res.clearCookie('auth_token', {
+    httpOnly: true,
+    secure: true,
+    sameSite: 'None',
+    maxAge: 86400000,
+    path: '/'
+  });
+  return res.status(200).json({
+    message: 'Sesion cerrada correctamente'
+  });
+};
+
 module.exports = {
   getAllUsers,
   getUserById,
   register,
   login,
   updateUser,
-  deleteUser
+  deleteUser,
+  logout
 };
